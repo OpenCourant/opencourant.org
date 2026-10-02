@@ -74,14 +74,14 @@ pre code { background: none; border: none; padding: 0; color: inherit; }
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  font-weight: 700;
-  font-size: 1.15rem;
-  color: var(--dark-text);
   text-decoration: none;
 }
-.brand:hover { color: #fff; }
-.brand-mark { flex-shrink: 0; }
+
+.brand img {
+  display: block;
+  height: 2rem;
+  width: auto;
+}
 
 .site-header nav {
   display: flex;
