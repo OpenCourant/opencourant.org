@@ -14,3 +14,6 @@
 {{ end -}}
 {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ if hugo.IsProduction }}
+<script defer data-domain="opencourant.org" data-api="https://img.resf.workers.dev/img/event" src="https://img.resf.workers.dev/js/script.outbound-links.js"></script>
+{{ end }}
