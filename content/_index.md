@@ -42,7 +42,7 @@ and impact simulation — we want to hear from you.
   </li>
   <li>
     <strong>Email</strong>
-    Reach the RESF directly at <a href="mailto:hello@resf.org">hello@resf.org</a>.
+    Email the project directly at <a href="mailto:hello@opencourant.org">hello@opencourant.org</a>.
   </li>
 </ul>
 

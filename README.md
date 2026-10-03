@@ -36,4 +36,4 @@ DNS verification and the CNAME automatically with the Actions-based flow).
 ## Contact
 
 - Chat: [#opencourant on the Rocky Linux Mattermost](https://chat.rockylinux.org/rocky-linux/channels/opencourant)
-- Email: [hello@resf.org](mailto:hello@resf.org)
+- Email: [hello@opencourant.org](mailto:hello@opencourant.org)

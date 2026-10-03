@@ -9,7 +9,7 @@ disableKinds = ["taxonomy", "term"]
   description = "OpenCourant is the community continuation of OpenRadioss — an open-source finite element solver for crash, impact, and highly nonlinear dynamic simulation, stewarded by the Rocky Enterprise Software Foundation."
   github = "https://github.com/OpenCourant/OpenCourant"
   chat = "https://chat.rockylinux.org/rocky-linux/channels/opencourant"
-  email = "hello@resf.org"
+  email = "hello@opencourant.org"
 
 [markup.goldmark.renderer]
   unsafe = true

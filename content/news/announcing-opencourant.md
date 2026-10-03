@@ -41,7 +41,7 @@ maintainer, researcher, industrial user, student — please reconnect:
 
 - **Chat:** the [#opencourant channel](https://chat.rockylinux.org/rocky-linux/channels/opencourant)
   on the Rocky Linux Mattermost
-- **Email:** [hello@resf.org](mailto:hello@resf.org)
+- **Email:** [hello@opencourant.org](mailto:hello@opencourant.org)
 - **Code:** [github.com/OpenCourant/OpenCourant](https://github.com/OpenCourant/OpenCourant)
 
 We especially want to hear from former OpenRadioss maintainers and community
