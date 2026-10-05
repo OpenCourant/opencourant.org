@@ -4,6 +4,12 @@ date = 2026-10-05T02:45:00Z
 summary = "Stable Linux packages are now published automatically from OpenCourant's own continuous integration. Here's what it took to rebuild the delivery pipeline, what the community already fixed, and what is still missing."
 +++
 
+> **Update, later the same day:** Windows x86-64 packages now ship too, and
+> arm64 builds run natively in an experimental pipeline. Both happened within
+> hours of this post going up, so the "what is still missing" section below was
+> accurate when written and is already partly out of date. The
+> [downloads page](/downloads/) is always current.
+
 When we [announced OpenCourant](/news/announcing-opencourant/) on October 1, the
 honest summary was that the code was safe and the lights were on. That was about
 all we could claim. It is no longer all we can claim.

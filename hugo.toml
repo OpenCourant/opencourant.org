@@ -42,14 +42,14 @@ disableKinds = ["taxonomy", "term"]
     name = "Linux arm64"
     asset = "OpenCourant_linuxa64.zip"
     note = "Starter and Engine in single and double precision, SMP and OpenMPI builds, plus the anim_to_vtk and th_to_csv converters."
-    reason = "No arm64 build of the hm_reader input library exists in any recovered extlib package, so this target cannot be built today. Unblocking it depends on the open reader effort."
+    reason = "Builds and the regression suite now run natively on arm64 in an experimental pipeline. The only surviving arm64 input reader is a February 2026 build that lacks several APIs, so arm64 runs with extra compatibility fallbacks; packages ship here once that settles."
 
   [[params.downloads.platforms]]
     id = "win64"
     name = "Windows x86-64"
     asset = "OpenCourant_win64.zip"
-    note = "Starter and Engine in single and double precision, SMP and Intel MPI builds, plus the anim_to_vtk and th_to_csv converters."
-    reason = "Needs Windows CI runners, the Intel oneAPI toolchain, and replacements for the Altair-internal build dependencies the old pipeline relied on."
+    note = "Starter and Engine in single and double precision, SMP only — no MPI Engine yet. Includes the converters, the launcher GUI, and the bundled Intel runtime libraries. Set KMP_STACKSIZE=400m before running."
+    reason = "Not present in the most recent release. Windows builds run in the stable pipeline, so this is normally a transient gap rather than a missing platform — check the releases page on GitHub."
 
 [markup.goldmark.renderer]
   unsafe = true

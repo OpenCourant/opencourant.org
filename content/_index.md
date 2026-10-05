@@ -25,14 +25,15 @@ foundations this community builds on.
 
 The solver builds, runs, and ships. Continuous integration has been rebuilt on
 OpenCourant's own infrastructure, replacing the vendor-internal pipeline it
-inherited; the regression suite gates every release; and stable Linux x86-64
-packages are published automatically.
+inherited; the regression suite gates every release; and stable Linux and
+Windows packages are published automatically.
 **[Get the latest build →](/downloads/)**
 
 The full commit history came across intact, so the work of everyone who
-contributed to OpenRadioss is preserved and attributed. Windows and Linux arm64
-packages aren't back yet, and a few proprietary build-time pieces still need
-open replacements. All of it is tracked in the open.
+contributed to OpenRadioss is preserved and attributed. Linux arm64 builds run
+natively in an experimental pipeline and aren't packaged here yet, and a few
+proprietary build-time pieces still need open replacements. All of it is
+tracked in the open.
 
 ## We're looking for the OpenRadioss community
 
