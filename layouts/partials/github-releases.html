@@ -1,0 +1,112 @@
+{{/*
+  Fetches releases from the GitHub Releases API at build time and normalises
+  them for layouts/downloads.html. No client-side JavaScript is involved: the
+  download links, sizes and checksums are baked into the published HTML.
+
+  The repository is derived from site.Params.github so it is not configured
+  twice. Set HUGO_GITHUB_TOKEN to authenticate the request; GitHub allows 60
+  unauthenticated requests per hour per IP, which is shared across all
+  GitHub-hosted runners, versus 5,000/hour with a token. The HUGO_ prefix
+  matches Hugo's default security.funcs.getenv allowlist, so no extra
+  security configuration is required.
+
+  Failures are warnings, not errors: a transient GitHub outage renders a
+  fallback block on the downloads page rather than breaking an unrelated
+  content deploy. Returns:
+
+    ok       bool    whether the fetch succeeded
+    repo     string  "owner/name"
+    url      string  the repository's releases page
+    latest   map     the newest non-prerelease release, or nil
+    releases slice   all releases, newest first
+
+  Each release:
+    tag, name, url, body (string), date (time.Time), prerelease (bool),
+    downloads (int), assets (map keyed by asset file name)
+
+  Each asset:
+    name, url, size (int), sha256 (string, may be empty), downloads (int)
+*/}}
+
+{{ $repo := strings.TrimSuffix "/" (strings.TrimPrefix "https://github.com/" site.Params.github) }}
+{{ $out := dict "ok" false "repo" $repo "url" (printf "https://github.com/%s/releases" $repo) "latest" false "releases" slice }}
+
+{{ $perPage := site.Params.downloads.releases | default 10 }}
+{{ $url := printf "https://api.github.com/repos/%s/releases?per_page=%d" $repo $perPage }}
+
+{{ $headers := dict
+  "Accept" "application/vnd.github+json"
+  "X-GitHub-Api-Version" "2022-11-28"
+}}
+{{ with os.Getenv "HUGO_GITHUB_TOKEN" }}
+  {{ $headers = merge $headers (dict "Authorization" (printf "Bearer %s" .)) }}
+{{ end }}
+{{ $opts := dict "headers" $headers "timeout" "20s" }}
+
+{{ $data := slice }}
+{{ $ok := false }}
+{{ with try (resources.GetRemote $url $opts) }}
+  {{ with .Err }}
+    {{ warnf "github-releases: could not fetch %s: %s" $url . }}
+  {{ else with .Value }}
+    {{ $data = .Content | transform.Unmarshal }}
+    {{ $ok = true }}
+  {{ else }}
+    {{ warnf "github-releases: no response from %s (404?)" $url }}
+  {{ end }}
+{{ end }}
+
+{{ if $ok }}
+  {{ $releases := slice }}
+  {{ range $data }}
+    {{ if not .draft }}
+      {{ $assets := dict }}
+      {{ $downloads := 0 }}
+      {{ range .assets }}
+        {{ $sha := "" }}
+        {{ with .digest }}
+          {{ $sha = strings.TrimPrefix "sha256:" . }}
+        {{ end }}
+        {{ $count := int (.download_count | default 0) }}
+        {{ $downloads = add $downloads $count }}
+        {{ $assets = merge $assets (dict .name (dict
+          "name" .name
+          "url" .browser_download_url
+          "size" (int (.size | default 0))
+          "sha256" $sha
+          "downloads" $count
+        )) }}
+      {{ end }}
+      {{ $releases = $releases | append (dict
+        "tag" .tag_name
+        "name" (.name | default .tag_name)
+        "url" .html_url
+        "body" (.body | default "")
+        "date" (time.AsTime (.published_at | default .created_at))
+        "prerelease" .prerelease
+        "downloads" $downloads
+        "assets" $assets
+      ) }}
+    {{ end }}
+  {{ end }}
+
+  {{/* The API already returns newest first; sort explicitly so the page does
+       not depend on that. */}}
+  {{ $releases = sort $releases "date" "desc" }}
+
+  {{ $latest := false }}
+  {{ range $releases }}
+    {{ if and (not $latest) (not .prerelease) }}
+      {{ $latest = . }}
+    {{ end }}
+  {{ end }}
+  {{/* Fall back to the newest release of any kind if every release is a
+       prerelease, so the page is never empty when releases exist. */}}
+  {{ if and (not $latest) $releases }}
+    {{ $latest = index $releases 0 }}
+  {{ end }}
+
+  {{ $out = merge $out (dict "ok" true "latest" $latest "releases" $releases) }}
+{{ end }}
+
+{{ return $out }}

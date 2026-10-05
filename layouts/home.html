@@ -1,0 +1,42 @@
+{{ define "main" }}
+<section class="hero">
+  <div class="container">
+    <h1>The community continuation of OpenRadioss</h1>
+    <p class="hero-lead">
+      OpenCourant is an open-source finite element solver for crash, impact, and
+      highly nonlinear dynamic simulation — carrying forward the OpenRadioss code
+      base under the GNU AGPL, in the open, where it belongs.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{{ "/downloads/" | relURL }}">Download</a>
+      <a class="btn btn-secondary" href="{{ site.Params.github }}">Get the code</a>
+      <a class="btn btn-secondary" href="{{ site.Params.chat }}">Join the chat</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    {{ .Content }}
+  </div>
+</section>
+
+{{ $news := where site.RegularPages "Section" "news" }}
+{{ with first 3 $news }}
+<section class="section section-news">
+  <div class="container">
+    <h2>News</h2>
+    <ul class="news-list">
+      {{ range . }}
+      <li>
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <p>{{ .Summary | plainify }}</p>
+      </li>
+      {{ end }}
+    </ul>
+    <p><a href="{{ "/news/" | relURL }}">All news →</a></p>
+  </div>
+</section>
+{{ end }}
+{{ end }}

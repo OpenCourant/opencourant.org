@@ -1,0 +1,68 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # /downloads/ is rendered from the GitHub Releases API at build time, so the
+  # site has to rebuild to pick up a new release. Run daily, and use the manual
+  # trigger below to publish a fresh release immediately.
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  HUGO_VERSION: "0.161.1"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Hugo
+        run: |
+          wget -O /tmp/hugo.deb \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i /tmp/hugo.deb
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build
+        env:
+          HUGO_ENVIRONMENT: production
+          # Authenticates the Releases API call in
+          # layouts/partials/github-releases.html. Unauthenticated requests are
+          # limited to 60/hour per IP, shared across all GitHub-hosted runners;
+          # with a token the limit is 5,000/hour. Read-only, expires with the job.
+          HUGO_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          hugo \
+            --gc \
+            --minify
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,155 @@
+{{ define "main" }}
+{{ $gh := partial "github-releases.html" . }}
+{{ $platforms := site.Params.downloads.platforms }}
+{{ $latest := $gh.latest }}
+
+<section class="hero hero-page">
+  <div class="container">
+    <p class="hero-kicker">Downloads</p>
+    <h1>{{ .Title }}</h1>
+    <p class="hero-lead">
+      Pre-built packages of the OpenCourant solver, published straight from the
+      project's continuous delivery pipeline. Everything here is free software
+      under the GNU AGPL v3.
+    </p>
+    {{ with $latest }}
+    <p class="release-id">
+      <span class="badge">{{ .tag }}</span>
+      {{ if .prerelease }}<span class="badge badge-pre">pre-release</span>{{ end }}
+      published <time datetime="{{ .date.Format "2006-01-02" }}">{{ .date.Format "January 2, 2006" }}</time>
+      · <a href="{{ .url }}">view on GitHub</a>
+    </p>
+    {{ end }}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    {{ if not $gh.ok }}
+      <div class="notice notice-warn">
+        <p>
+          <strong>Download details are temporarily unavailable.</strong>
+          The release index could not be read from GitHub when this page was
+          last built. Every package is still available directly from
+          <a href="{{ $gh.url }}">the releases page on GitHub</a>.
+        </p>
+      </div>
+
+    {{ else if not $latest }}
+      <div class="notice notice-warn">
+        <p>
+          <strong>No releases have been published yet.</strong>
+          Build the solver from source at
+          <a href="{{ site.Params.github }}">{{ $gh.repo }}</a>.
+        </p>
+      </div>
+
+    {{ else }}
+      <h2 id="latest">Latest release</h2>
+      <ul class="download-grid">
+        {{ range $platforms }}
+          {{ $p := . }}
+          {{ $asset := index $latest.assets $p.asset }}
+          <li class="download-card{{ if not $asset }} is-unavailable{{ end }}" id="{{ $p.id }}">
+            <h3>{{ $p.name }}</h3>
+            {{ if $asset }}
+              <p class="download-filename"><code>{{ $asset.name }}</code></p>
+              <p class="download-action">
+                <a class="btn btn-primary" href="{{ $asset.url }}">Download</a>
+              </p>
+              <dl class="download-meta">
+                <div>
+                  <dt>Size</dt>
+                  <dd>{{ printf "%.1f MiB" (div (float $asset.size) 1048576.0) }}</dd>
+                </div>
+                <div>
+                  <dt>Downloads</dt>
+                  <dd>{{ lang.FormatNumber 0 $asset.downloads }}</dd>
+                </div>
+                {{ with $asset.sha256 }}
+                <div class="download-meta-full">
+                  <dt>SHA-256</dt>
+                  <dd><code class="checksum">{{ . }}</code></dd>
+                </div>
+                {{ end }}
+              </dl>
+              {{ with $p.note }}<p class="download-note">{{ . }}</p>{{ end }}
+            {{ else }}
+              <p class="download-status">Not yet available</p>
+              {{ with $p.reason }}<p class="download-note">{{ . }}</p>{{ end }}
+            {{ end }}
+          </li>
+        {{ end }}
+      </ul>
+
+      {{ with $latest.body }}
+      <details class="release-notes">
+        <summary>Release notes for {{ $latest.tag }}</summary>
+        {{ $.RenderString (dict "display" "block") . }}
+      </details>
+      {{ end }}
+    {{ end }}
+
+    {{ .Content }}
+
+    {{ with after 1 $gh.releases }}
+    <h2 id="previous">Previous releases</h2>
+    <p>
+      The delivery pipeline keeps the three most recent builds and prunes older
+      tags. If you need a specific historical build, pin the commit and build
+      from source.
+    </p>
+    <div class="table-scroll">
+      <table class="release-table">
+        <thead>
+          <tr>
+            <th scope="col">Release</th>
+            <th scope="col">Published</th>
+            <th scope="col">Packages</th>
+            <th scope="col">Downloads</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range . }}
+          {{ $rel := . }}
+          {{ $count := 0 }}
+          {{ range $platforms }}{{ with index $rel.assets .asset }}{{ $count = add $count 1 }}{{ end }}{{ end }}
+          <tr>
+            <td>
+              <a href="{{ $rel.url }}">{{ $rel.tag }}</a>
+              {{ if $rel.prerelease }}<span class="badge badge-pre">pre-release</span>{{ end }}
+            </td>
+            <td>
+              <time datetime="{{ $rel.date.Format "2006-01-02" }}">{{ $rel.date.Format "January 2, 2006" }}</time>
+            </td>
+            <td>
+              {{ if eq $count 0 }}
+                <span class="muted">none</span>
+              {{ else }}
+                {{ range $platforms }}
+                  {{ $pid := .id }}
+                  {{ with index $rel.assets .asset }}
+                    <a class="pkg-link" href="{{ .url }}">{{ $pid }}</a>
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+            </td>
+            <td>{{ lang.FormatNumber 0 $rel.downloads }}</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+    {{ end }}
+
+    <p class="page-footnote">
+      This page is generated at build time from the GitHub Releases API and is
+      rebuilt daily; it was last checked on {{ now.Format "January 2, 2006" }}.
+      The authoritative list is always
+      <a href="{{ $gh.url }}">{{ $gh.repo }}/releases</a>.
+    </p>
+
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,62 @@
+baseURL = "https://opencourant.org/"
+locale = "en-us"
+title = "OpenCourant"
+
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term"]
+
+[params]
+  description = "OpenCourant is the community continuation of OpenRadioss — an open-source finite element solver for crash, impact, and highly nonlinear dynamic simulation."
+  github = "https://github.com/OpenCourant/OpenCourant"
+  chat = "https://chat.rockylinux.org/rocky-linux/channels/opencourant"
+  email = "hello@opencourant.org"
+
+# Release packages shown on /downloads/.
+#
+# The downloads page is rendered at build time from the GitHub Releases API
+# (see layouts/partials/github-releases.html). Each platform below reserves a
+# card on that page; the card is populated automatically as soon as a release
+# publishes an asset whose file name matches `asset`, and otherwise renders as
+# "not yet available" with `reason` shown.
+#
+# Consequence: when the delivery workflow starts shipping win64 or linuxa64
+# packages again, those cards light up with no change to this site. A new
+# platform is one more block here.
+#
+# `releases` is the number of releases to request from the API. The delivery
+# workflow prunes to the 3 most recent latest-* tags, so 10 is ample headroom.
+[params.downloads]
+  releases = 10
+
+  [[params.downloads.platforms]]
+    id = "linux64"
+    name = "Linux x86-64"
+    asset = "OpenCourant_linux64.zip"
+    note = "Starter and Engine in single and double precision, SMP and OpenMPI builds, plus the anim_to_vtk and th_to_csv converters. The _ompi Engine requires OpenMPI 4.1.2; the SMP Engine runs standalone."
+
+  [[params.downloads.platforms]]
+    id = "linuxa64"
+    name = "Linux arm64"
+    asset = "OpenCourant_linuxa64.zip"
+    note = "Starter and Engine in single and double precision, SMP and OpenMPI builds, plus the anim_to_vtk and th_to_csv converters."
+    reason = "No arm64 build of the hm_reader input library exists in any recovered extlib package, so this target cannot be built today. Unblocking it depends on the open reader effort."
+
+  [[params.downloads.platforms]]
+    id = "win64"
+    name = "Windows x86-64"
+    asset = "OpenCourant_win64.zip"
+    note = "Starter and Engine in single and double precision, SMP and Intel MPI builds, plus the anim_to_vtk and th_to_csv converters."
+    reason = "Needs Windows CI runners, the Intel oneAPI toolchain, and replacements for the Altair-internal build dependencies the old pipeline relied on."
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+# resources.GetRemote caches to disk and defaults to maxAge = -1 (never
+# expires), which would pin local builds to the first API response forever.
+# CI runners start with a cold cache, so this only affects local development.
+[caches.getresource]
+  maxAge = "15m"
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
