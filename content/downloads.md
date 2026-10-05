@@ -40,6 +40,7 @@ published package yet.
 ## Something missing?
 
 If a package you relied on under OpenRadioss is not here, say so — it helps us
-prioritise. Open an issue on
+prioritise. Start a thread on
+[the forum](https://github.com/orgs/OpenCourant/discussions), open an issue on
 [GitHub](https://github.com/OpenCourant/OpenCourant/issues), or find us in
 [the chat](https://chat.rockylinux.org/rocky-linux/channels/opencourant).

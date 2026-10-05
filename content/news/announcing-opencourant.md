@@ -37,6 +37,7 @@ reassembling the people.
 If you were part of the OpenRadioss community in any capacity — contributor,
 maintainer, researcher, industrial user, student — please reconnect:
 
+- **Forum:** [GitHub Discussions](https://github.com/orgs/OpenCourant/discussions)
 - **Chat:** the [#opencourant channel](https://chat.rockylinux.org/rocky-linux/channels/opencourant)
   on the Rocky Linux Mattermost
 - **Email:** [hello@opencourant.org](mailto:hello@opencourant.org)

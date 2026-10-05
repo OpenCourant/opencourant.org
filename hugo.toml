@@ -7,7 +7,10 @@ disableKinds = ["taxonomy", "term"]
 
 [params]
   description = "OpenCourant is the community continuation of OpenRadioss — an open-source finite element solver for crash, impact, and highly nonlinear dynamic simulation."
+  # NOTE: `github` must stay pointing at the solver repository —
+  # layouts/partials/github-releases.html derives the Releases API path from it.
   github = "https://github.com/OpenCourant/OpenCourant"
+  forum = "https://github.com/orgs/OpenCourant/discussions"
   chat = "https://chat.rockylinux.org/rocky-linux/channels/opencourant"
   email = "hello@opencourant.org"
 

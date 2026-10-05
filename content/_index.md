@@ -48,8 +48,14 @@ simulation — we want to hear from you.
     Issues and pull requests are open.
   </li>
   <li>
+    <strong>Forum</strong>
+    Ask questions, propose changes, and follow release threads in
+    <a href="https://github.com/orgs/OpenCourant/discussions">GitHub Discussions</a>.
+  </li>
+  <li>
     <strong>Chat</strong>
-    Join the <a href="https://chat.rockylinux.org/rocky-linux/channels/opencourant">#opencourant channel</a>
+    For realtime conversation, join the
+    <a href="https://chat.rockylinux.org/rocky-linux/channels/opencourant">#opencourant channel</a>
     on the Rocky Linux Mattermost.
   </li>
   <li>
