@@ -1,7 +1,7 @@
 +++
 title = "Download OpenCourant"
 layout = "downloads"
-description = "Download pre-built OpenCourant solver packages for Linux x86-64, Linux arm64 and Windows, straight from the project's continuous delivery pipeline."
+description = "Download pre-built OpenCourant solver packages for Linux x86-64, Linux arm64 and Windows, or pull the multi-arch container images, straight from the project's continuous delivery pipeline."
 +++
 
 ## Verifying your download
@@ -60,6 +60,59 @@ The Starter and Engine executables live in `exec/`, alongside the `anim_to_vtk`
 and `th_to_csv` converters. Full instructions, including the OpenMPI
 requirement for the `_ompi` Engines on Linux, are in
 [INSTALL.md](https://github.com/OpenCourant/OpenCourant/blob/main/INSTALL.md).
+
+## Containers
+
+If you'd rather not manage paths and runtimes at all, pull the solver as a
+container. Images are multi-arch (x86-64 and arm64 in one tag), include the
+OpenMPI runtime, and are built from the exact packages above — they publish
+only after the same regression suite passes. Both registries carry identical
+images:
+
+```text
+docker.io/opencourant/opencourant
+ghcr.io/opencourant/opencourant
+```
+
+Use `latest` for the newest stable build, or pin a release with its dated tag,
+for example `latest-20261006`.
+
+### Docker or Podman
+
+Run from the directory that contains your input files:
+
+```sh
+docker run --rm -v $PWD:/work -e OMP_NUM_THREADS=4 \
+    opencourant/opencourant starter -i MODEL_0000.rad -np 1
+docker run --rm -v $PWD:/work -e OMP_NUM_THREADS=4 \
+    opencourant/opencourant engine -i MODEL_0001.rad
+```
+
+MPI runs work out of the box:
+
+```sh
+docker run --rm -v $PWD:/work -e OMP_NUM_THREADS=2 \
+    opencourant/opencourant mpiexec -np 4 engine_ompi -i MODEL_0001.rad
+```
+
+The executables are on `PATH` under convenience names: `starter`, `engine`,
+`engine_ompi` (plus `_sp` single-precision variants), together with the
+converters.
+
+### Apptainer
+
+On HPC systems, pull the same image as a SIF:
+
+```sh
+apptainer pull opencourant.sif docker://ghcr.io/opencourant/opencourant:latest
+apptainer exec opencourant.sif starter -i MODEL_0000.rad -np 4
+apptainer exec opencourant.sif mpiexec -np 4 engine_ompi -i MODEL_0001.rad
+```
+
+Definition files, including one that compiles from source instead, live in the
+repository's
+[`Apptainer/`](https://github.com/OpenCourant/OpenCourant/tree/main/Apptainer)
+directory.
 
 ## Building from source
 

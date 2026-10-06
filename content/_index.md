@@ -26,7 +26,8 @@ foundations this community builds on.
 The solver builds, runs, and ships. Continuous integration has been rebuilt on
 OpenCourant's own infrastructure, replacing the vendor-internal pipeline it
 inherited; the regression suite gates every release; and stable packages for
-Linux x86-64, Linux arm64 and Windows are published automatically.
+Linux x86-64, Linux arm64 and Windows are published automatically, alongside
+multi-arch container images on Docker Hub and GHCR.
 **[Get the latest build →](/downloads/)**
 
 The full commit history came across intact, so the work of everyone who
