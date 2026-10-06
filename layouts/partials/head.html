@@ -9,6 +9,36 @@
 <meta property="og:description" content="{{ $desc }}">
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 <meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+{{/*
+  Social card image. Slack, Discord, LinkedIn and Twitter all need an
+  absolute URL here, and none of them will render an SVG, which is why this
+  is a committed PNG rather than the brand logo itself.
+
+  Pages may override with an `images` front matter entry. Width and height
+  are read from the resource rather than hardcoded, so an override of a
+  different size does not advertise the wrong dimensions. Note that .Width
+  is read before fingerprinting, as the fingerprinted resource does not
+  retain image methods.
+*/}}
+{{ $ogImage := "" }}{{ $ogW := 0 }}{{ $ogH := 0 }}
+{{ with .Params.images }}
+  {{ $ogImage = absURL (index . 0) }}
+{{ else }}
+  {{ with resources.Get "og-default.png" }}
+    {{ $ogW = .Width }}{{ $ogH = .Height }}
+    {{ $ogImage = (. | fingerprint).Permalink }}
+  {{ end }}
+{{ end }}
+{{ with $ogImage -}}
+<meta property="og:image" content="{{ . }}">
+{{ if $ogW }}<meta property="og:image:width" content="{{ $ogW }}">
+<meta property="og:image:height" content="{{ $ogH }}">
+{{ end -}}
+<meta property="og:image:alt" content="{{ site.Title }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ . }}">
+{{ end -}}
 {{ range .AlternativeOutputFormats -}}
 <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}">
 {{ end -}}
