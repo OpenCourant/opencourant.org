@@ -52,6 +52,28 @@ disableKinds = ["taxonomy", "term"]
     note = "Starter and Engine in single and double precision, SMP only, with no MPI Engine yet. Includes the converters, the launcher GUI, and the bundled Intel runtime libraries. Set KMP_STACKSIZE=400m before running."
     reason = "Not present in the most recent release. Windows builds run in the stable pipeline, so this is normally a transient gap rather than a missing platform. Check the releases page on GitHub."
 
+# Container images shown on /downloads/.
+#
+# The images are published to both registries by the same delivery pipeline
+# that cuts the release, tagged `latest` and `latest-YYYYMMDD`. The downloads
+# page renders the pull commands against the tag of the release it is showing,
+# so they stay in step automatically.
+#
+# The SIF entries below are ordinary release assets, matched by file name the
+# same way the platform cards are. They render only once the Apptainer build
+# starts publishing them; until then the page shows `apptainer pull` instead.
+[params.downloads.containers]
+  ghcr = "ghcr.io/opencourant/opencourant"
+  dockerhub = "docker.io/opencourant/opencourant"
+
+  [[params.downloads.containers.sif]]
+    name = "Linux x86-64"
+    asset = "OpenCourant_linux64.sif"
+
+  [[params.downloads.containers.sif]]
+    name = "Linux arm64"
+    asset = "OpenCourant_linuxa64.sif"
+
 [markup.goldmark.renderer]
   unsafe = true
 

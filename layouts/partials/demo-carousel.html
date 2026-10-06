@@ -1,0 +1,164 @@
+{{/*
+  Demo carousel for the homepage.
+
+  Drop a file into assets/demos/ and it appears here. Nothing else to edit.
+
+  - Files are sorted by name, so prefix with 01-, 02- to control the order.
+  - Hugo's media type decides the element: video/* renders a <video>,
+    image/* renders an <img>. Anything else is skipped.
+  - Files sharing a basename are grouped into one slide. Dropping
+    logo-impact.webm next to logo-impact.mp4 adds a second <source> with the
+    right type attribute, so the browser can skip formats it cannot play
+    without downloading them first.
+  - Each file is fingerprinted, so replacing one busts browser caches.
+  - Alt text is the humanised basename: logo-impact.mp4 -> "Logo impact".
+
+  No JavaScript: the carousel is CSS scroll-snap, navigated by swipe,
+  trackpad, or the anchor-link dots below it.
+*/}}
+
+{{ $files := sort (resources.Match "demos/*") "Name" }}
+
+{{/* Group by basename, preserving alphabetical order of the groups. */}}
+{{ $s := newScratch }}
+{{ range $files }}
+  {{ $base := strings.TrimSuffix (path.Ext .Name) (path.Base .Name) }}
+  {{ $existing := index ($s.Get "groups" | default dict) $base | default slice }}
+  {{ $s.SetInMap "groups" $base ($existing | append .) }}
+{{ end }}
+{{ $groups := $s.Get "groups" | default dict }}
+
+{{ with $groups }}
+<section class="section section-demos">
+  <div class="container">
+    <ul class="demo-carousel">
+      {{ range $base, $items := . }}
+        {{ $first := index $items 0 }}
+        {{ $kind := $first.MediaType.MainType }}
+        {{ $label := $base | replaceRE "[-_]+" " " | humanize }}
+        {{ $id := printf "demo-%s" ($base | urlize) }}
+        {{ if or (eq $kind "video") (eq $kind "image") }}
+        <li class="demo-slide" id="{{ $id }}">
+          {{ if eq $kind "video" }}
+            {{/*
+              Browsers pick the first <source> they support, so order by
+              preference rather than by filename. Alphabetical would put mp4
+              ahead of the smaller, more modern webm.
+            */}}
+            {{ $pref := slice "video/webm" "video/mp4" "video/ogg" }}
+            {{ $sources := slice }}
+            {{ range $pref }}
+              {{ $want := . }}
+              {{ range $items }}
+                {{ if eq .MediaType.Type $want }}{{ $sources = $sources | append . }}{{ end }}
+              {{ end }}
+            {{ end }}
+            {{ range $items }}
+              {{ if and (eq .MediaType.MainType "video") (not (in $pref .MediaType.Type)) }}
+                {{ $sources = $sources | append . }}
+              {{ end }}
+            {{ end }}
+            <video autoplay muted loop playsinline preload="metadata"
+                   width="1600" height="700" aria-label="{{ $label }}">
+              {{ range $sources }}
+                {{ $v := . | fingerprint }}
+                <source src="{{ $v.RelPermalink }}" type="{{ .MediaType.Type }}">
+              {{ end }}
+            </video>
+          {{ else }}
+            {{ $img := $first | fingerprint }}
+            <img src="{{ $img.RelPermalink }}" alt="{{ $label }}" loading="lazy" decoding="async">
+          {{ end }}
+        </li>
+        {{ end }}
+      {{ end }}
+    </ul>
+
+    {{ if gt (len .) 1 }}
+    <p class="demo-dots">
+      {{ range $base, $items := . }}
+        <a href="#demo-{{ $base | urlize }}"
+           aria-label="Show {{ $base | replaceRE "[-_]+" " " | humanize }}">
+          <span aria-hidden="true"></span>
+        </a>
+      {{ end }}
+    </p>
+    {{ end }}
+  </div>
+</section>
+
+{{/*
+  Sequencing. The markup above carries autoplay+loop, so with scripting
+  disabled every slide simply loops on its own and the dots still navigate.
+  This script upgrades that to "play one, advance to the next":
+
+    - clears loop, so videos fire an `ended` event
+    - advances the carousel when a video ends
+    - an IntersectionObserver drives playback from whatever is actually on
+      screen, so manual swipes and dot clicks stay in sync with no extra code
+    - image slides have no `ended` event, so they advance on a timer
+    - honours prefers-reduced-motion by pausing and leaving everything manual
+*/}}
+<script>
+(function () {
+  var track = document.querySelector('.demo-carousel');
+  if (!track) return;
+
+  var slides = Array.prototype.slice.call(track.querySelectorAll('.demo-slide'));
+  var dots = Array.prototype.slice.call(document.querySelectorAll('.demo-dots a'));
+  var STILL_MS = 5000;
+
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    slides.forEach(function (s) {
+      var v = s.querySelector('video');
+      if (v) { v.loop = false; v.pause(); }
+    });
+    return;
+  }
+
+  if (slides.length < 2) return;
+
+  var timer;
+
+  function goTo(n) {
+    var next = slides[((n % slides.length) + slides.length) % slides.length];
+    track.scrollTo({
+      left: next.offsetLeft - slides[0].offsetLeft,
+      behavior: 'smooth'
+    });
+  }
+
+  slides.forEach(function (slide, n) {
+    var v = slide.querySelector('video');
+    if (!v) return;
+    v.loop = false;
+    v.addEventListener('ended', function () { goTo(n + 1); });
+  });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      var n = slides.indexOf(e.target);
+      var v = e.target.querySelector('video');
+
+      if (!e.isIntersecting) {
+        if (v) v.pause();
+        return;
+      }
+
+      dots.forEach(function (d, i) { d.classList.toggle('is-active', i === n); });
+
+      if (v) {
+        v.currentTime = 0;
+        var p = v.play();
+        if (p && p.catch) p.catch(function () {});
+      } else {
+        clearTimeout(timer);
+        timer = setTimeout(function () { goTo(n + 1); }, STILL_MS);
+      }
+    });
+  }, { root: track, threshold: 0.6 });
+
+  slides.forEach(function (s) { observer.observe(s); });
+})();
+</script>
+{{ end }}

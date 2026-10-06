@@ -1,0 +1,53 @@
+{{/*
+  Renders direct download cards for the Apptainer SIF release assets.
+
+  Used from content/downloads.md so the SIF downloads sit inside the hand
+  written Apptainer section while still being driven by live release data
+  (size, SHA-256, download count).
+
+  The assets are matched by file name from params.downloads.containers.sif.
+  Until the Apptainer build starts publishing them the shortcode renders
+  nothing at all, so the surrounding prose still reads correctly.
+*/}}
+{{ $gh := partial "github-releases.html" . }}
+{{ $latest := $gh.latest }}
+{{ $sif := site.Params.downloads.containers.sif }}
+
+{{ if and $latest $sif }}
+  {{ $has := false }}
+  {{ range $sif }}{{ with index $latest.assets .asset }}{{ $has = true }}{{ end }}{{ end }}
+
+  {{ if $has }}
+  <p>Or download a prebuilt SIF directly, built and tested by the same pipeline:</p>
+  <ul class="download-grid">
+    {{ range $sif }}
+      {{ $s := . }}
+      {{ with index $latest.assets $s.asset }}
+      <li class="download-card">
+        <h3>{{ $s.name }}</h3>
+        <p class="download-filename"><code>{{ .name }}</code></p>
+        <p class="download-action">
+          <a class="btn btn-primary" href="{{ .url }}">Download .sif</a>
+        </p>
+        <dl class="download-meta">
+          <div>
+            <dt>Size</dt>
+            <dd>{{ printf "%.1f MiB" (div (float .size) 1048576.0) }}</dd>
+          </div>
+          <div>
+            <dt>Downloads</dt>
+            <dd>{{ lang.FormatNumber 0 .downloads }}</dd>
+          </div>
+          {{ with .sha256 }}
+          <div class="download-meta-full">
+            <dt>SHA-256</dt>
+            <dd><code class="checksum">{{ . }}</code></dd>
+          </div>
+          {{ end }}
+        </dl>
+      </li>
+      {{ end }}
+    {{ end }}
+  </ul>
+  {{ end }}
+{{ end }}

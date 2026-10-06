@@ -47,6 +47,22 @@
 
     {{ else }}
       <h2 id="latest">Latest release</h2>
+
+      {{ with $latest.body }}
+      {{/*
+        The release body carries its own headings, several of which collide
+        with this page's (notably "Containers"). Namespace the generated IDs
+        so in-page anchors such as #containers resolve to the real section
+        rather than a heading hidden inside this collapsed block.
+      */}}
+      {{ $notes := $.RenderString (dict "display" "block") . }}
+      {{ $notes = $notes | replaceRE `(<h[1-6][^>]*?) id="([^"]*)"` `${1} id="rn-${2}"` | safeHTML }}
+      <details class="release-notes">
+        <summary>Release notes for {{ $latest.tag }}</summary>
+        {{ $notes }}
+      </details>
+      {{ end }}
+
       <ul class="download-grid">
         {{ range $platforms }}
           {{ $p := . }}
@@ -82,13 +98,6 @@
           </li>
         {{ end }}
       </ul>
-
-      {{ with $latest.body }}
-      <details class="release-notes">
-        <summary>Release notes for {{ $latest.tag }}</summary>
-        {{ $.RenderString (dict "display" "block") . }}
-      </details>
-      {{ end }}
     {{ end }}
 
     {{ .Content }}

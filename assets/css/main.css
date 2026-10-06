@@ -158,6 +158,83 @@ pre code { background: none; border: none; padding: 0; color: inherit; }
 /* Sections */
 .section { padding: 3rem 0; }
 
+/* Demo carousel (assets/demos/, see layouts/partials/demo-carousel.html) */
+/* No background of its own: inheriting the page background is what separates
+   this band from the hero, whose gradient ends on --dark-soft. */
+.section-demos {
+  padding: 2.5rem 0;
+}
+
+.demo-carousel {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.demo-carousel::-webkit-scrollbar { display: none; }
+
+.demo-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  min-width: 0;
+}
+
+.demo-slide video,
+.demo-slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1600 / 700;
+  object-fit: cover;
+  border-radius: 10px;
+  background: var(--dark);
+}
+
+.demo-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 1rem 0 0;
+}
+
+.demo-dots a {
+  display: block;
+  padding: 0.35rem;
+  line-height: 0;
+}
+
+.demo-dots span {
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--dark-muted);
+  opacity: 0.5;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.demo-dots a:hover span,
+.demo-dots a:focus-visible span {
+  background: var(--green);
+  opacity: 1;
+}
+
+/* Toggled by the sequencing script to track the visible slide. */
+.demo-dots a.is-active span {
+  background: var(--green);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-carousel { scroll-behavior: auto; }
+}
+
 .section-news {
   background: var(--paper-alt);
   border-top: 1px solid var(--border);
