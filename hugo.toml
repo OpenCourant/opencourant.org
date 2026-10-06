@@ -6,8 +6,8 @@ enableRobotsTXT = true
 disableKinds = ["taxonomy", "term"]
 
 [params]
-  description = "OpenCourant is the community continuation of OpenRadioss — an open-source finite element solver for crash, impact, and highly nonlinear dynamic simulation."
-  # NOTE: `github` must stay pointing at the solver repository —
+  description = "OpenCourant is the community continuation of OpenRadioss, an open-source finite element solver for crash, impact, and highly nonlinear dynamic simulation."
+  # NOTE: `github` must stay pointing at the solver repository;
   # layouts/partials/github-releases.html derives the Releases API path from it.
   github = "https://github.com/OpenCourant/OpenCourant"
   forum = "https://github.com/orgs/OpenCourant/discussions"
@@ -35,21 +35,22 @@ disableKinds = ["taxonomy", "term"]
     id = "linux64"
     name = "Linux x86-64"
     asset = "OpenCourant_linux64.zip"
-    note = "Starter and Engine in single and double precision, SMP and OpenMPI builds, plus the anim_to_vtk and th_to_csv converters. The _ompi Engine requires OpenMPI 4.1.2; the SMP Engine runs standalone."
+    note = "Starter and Engine in single and double precision, SMP and OpenMPI builds, plus the anim_to_vtk and th_to_csv converters and the launcher GUI. The _ompi Engines require OpenMPI 4.1.2; the SMP Engines run standalone."
+    reason = "Not present in the most recent release. Linux x86-64 builds run in the stable pipeline, so this is normally a transient gap rather than a missing platform. Check the releases page on GitHub."
 
   [[params.downloads.platforms]]
     id = "linuxa64"
     name = "Linux arm64"
     asset = "OpenCourant_linuxa64.zip"
-    note = "Starter and Engine in single and double precision, SMP and OpenMPI builds, plus the anim_to_vtk and th_to_csv converters."
-    reason = "Builds and the regression suite now run natively on arm64 in an experimental pipeline. The only surviving arm64 input reader is a February 2026 build that lacks several APIs, so arm64 runs with extra compatibility fallbacks; packages ship here once that settles."
+    note = "Starter and Engine in single and double precision, SMP and OpenMPI builds, plus the anim_to_vtk and th_to_csv converters and the launcher GUI. The _ompi Engines require OpenMPI 4.1.2; the SMP Engines run standalone."
+    reason = "Not present in the most recent release. Linux arm64 builds run in the stable pipeline, so this is normally a transient gap rather than a missing platform. Check the releases page on GitHub."
 
   [[params.downloads.platforms]]
     id = "win64"
     name = "Windows x86-64"
     asset = "OpenCourant_win64.zip"
-    note = "Starter and Engine in single and double precision, SMP only — no MPI Engine yet. Includes the converters, the launcher GUI, and the bundled Intel runtime libraries. Set KMP_STACKSIZE=400m before running."
-    reason = "Not present in the most recent release. Windows builds run in the stable pipeline, so this is normally a transient gap rather than a missing platform — check the releases page on GitHub."
+    note = "Starter and Engine in single and double precision, SMP only, with no MPI Engine yet. Includes the converters, the launcher GUI, and the bundled Intel runtime libraries. Set KMP_STACKSIZE=400m before running."
+    reason = "Not present in the most recent release. Windows builds run in the stable pipeline, so this is normally a transient gap rather than a missing platform. Check the releases page on GitHub."
 
 [markup.goldmark.renderer]
   unsafe = true

@@ -4,10 +4,10 @@ date = 2026-10-05T02:45:00Z
 summary = "Stable Linux packages are now published automatically from OpenCourant's own continuous integration. Here's what it took to rebuild the delivery pipeline, what the community already fixed, and what is still missing."
 +++
 
-> **Update, later the same day:** Windows x86-64 packages now ship too, and
-> arm64 builds run natively in an experimental pipeline. Both happened within
-> hours of this post going up, so the "what is still missing" section below was
-> accurate when written and is already partly out of date. The
+> **Update, a day later:** Windows x86-64 and Linux arm64 packages now ship
+> too, from the same pipeline and under the same regression gate. Both landed
+> within about a day of this post going up, so the "what is still missing"
+> section below was accurate when written and is now out of date. The
 > [downloads page](/downloads/) is always current.
 
 When we [announced OpenCourant](/news/announcing-opencourant/) on October 1, the
@@ -15,7 +15,7 @@ honest summary was that the code was safe and the lights were on. That was about
 all we could claim. It is no longer all we can claim.
 
 **OpenCourant now publishes automated builds.** Stable Linux x86-64 packages are
-available from the new [downloads page](/downloads/) — compiled from source,
+available from the new [downloads page](/downloads/), compiled from source,
 gated on the regression suite, and released straight from continuous
 integration.
 
@@ -23,8 +23,8 @@ integration.
 
 The delivery pipeline we inherited did not survive the shutdown. It depended on
 an internal container registry, self-hosted runners, a private binary
-repository, and a second private source repository — none of which came with the
-code. Every one of those had to be replaced before a single package could ship.
+repository, and a second private source repository. None of those came with the
+code. Every one had to be replaced before a single package could ship.
 
 It has been rebuilt on OpenCourant's own infrastructure, using our own CI
 images. The regression suite now runs as a gate *before* packaging, so a build
@@ -45,9 +45,6 @@ archived the original package, we verified it against an independently recovered
 binary of the same build, and it is now the reader in every Linux build we
 publish. The starter uses the solver's native part API again instead of a
 compatibility fallback.
-
-One request, one answer, and every download since is better for it. That is the
-entire premise of this project working as intended, inside a week.
 
 ## What is still missing
 
@@ -74,11 +71,11 @@ The infrastructure is the easy part. The harder and more important work is
 reassembling the community, and settling how this project is governed, with the
 people who built it.
 
-If you worked with OpenRadioss in any capacity — contributor, maintainer,
-researcher, industrial user, student — please reconnect:
+If you worked with OpenRadioss in any capacity, whether as a contributor,
+maintainer, researcher, industrial user or student, please reconnect:
 
-- **Forum:** [GitHub Discussions](https://github.com/orgs/OpenCourant/discussions) —
-  questions, proposals, and release threads
+- **Forum:** [GitHub Discussions](https://github.com/orgs/OpenCourant/discussions)
+  for questions, proposals, and release threads
 - **Chat:** the [#opencourant channel](https://chat.rockylinux.org/rocky-linux/channels/opencourant)
   on the Rocky Linux Mattermost
 - **Email:** [hello@opencourant.org](mailto:hello@opencourant.org)

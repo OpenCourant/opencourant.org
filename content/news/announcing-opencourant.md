@@ -6,9 +6,9 @@ summary = "OpenRadioss has been discontinued and its repository deleted. The cod
 
 Today, Siemens discontinued the OpenRadioss project. The openradioss.org
 website now redirects to a product transition page, and the OpenRadioss GitHub
-repository — with its full history of community contributions since Altair
-open-sourced the Radioss solver in 2022 — returns a 404. No public archive was
-left behind.
+repository returns a 404, taking with it the full history of community
+contributions since Altair open-sourced the Radioss solver in 2022. No public
+archive was left behind.
 
 OpenRadioss was something rare: an industry-proven, production-grade explicit
 finite element solver for crash, blast, and impact analysis, available to
@@ -25,7 +25,7 @@ last available OpenRadioss open-source code base. The repository is live now:
 **[github.com/OpenCourant/OpenCourant](https://github.com/OpenCourant/OpenCourant)**
 
 The license remains the GNU AGPL v3, and the project will be governed in the
-open. The name honors the Courant–Friedrichs–Lewy condition — the stability
+open. The name honors the Courant–Friedrichs–Lewy condition, the stability
 criterion underpinning explicit dynamics solvers like this one.
 
 ## We need the community back
@@ -34,8 +34,9 @@ It has been only hours since the shutdown, so there is not much to announce
 beyond this: the code is safe, and the lights are on. What matters now is
 reassembling the people.
 
-If you were part of the OpenRadioss community in any capacity — contributor,
-maintainer, researcher, industrial user, student — please reconnect:
+If you were part of the OpenRadioss community in any capacity, whether as a
+contributor, maintainer, researcher, industrial user or student, please
+reconnect:
 
 - **Forum:** [GitHub Discussions](https://github.com/orgs/OpenCourant/discussions)
 - **Chat:** the [#opencourant channel](https://chat.rockylinux.org/rocky-linux/channels/opencourant)
