@@ -108,7 +108,12 @@ set KMP_STACKSIZE=400m
 ```
 
 The required Intel runtime libraries ship inside the package, under
-`extlib/intelOneAPI_runtime/win64`.
+`extlib/intelOneAPI_runtime/win64`. That includes the Intel MPI runtime, so
+single-node MPI runs need no further setup:
+
+```bat
+mpiexec -localonly -np 4 %OPENCOURANT_PATH%\exec\engine_win64_impi.exe -i MODEL_0001.rad
+```
 
 ### Afterwards
 

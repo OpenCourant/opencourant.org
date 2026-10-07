@@ -49,7 +49,7 @@ disableKinds = ["taxonomy", "term"]
     id = "win64"
     name = "Windows x86-64"
     asset = "OpenCourant_win64.zip"
-    note = "Starter and Engine in single and double precision, SMP only, with no MPI Engine yet. Includes the converters, the launcher GUI, and the bundled Intel runtime libraries. Set KMP_STACKSIZE=400m before running."
+    note = "Starter and Engine in single and double precision, SMP and Intel MPI builds, plus the converters and the launcher GUI. The Intel MPI runtime is bundled, so single-node mpiexec runs need no extra setup. Set KMP_STACKSIZE=400m before running."
     reason = "Not present in the most recent release. Windows builds run in the stable pipeline, so this is normally a transient gap rather than a missing platform. Check the releases page on GitHub."
 
 # Container images shown on /downloads/.

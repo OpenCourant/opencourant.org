@@ -46,11 +46,12 @@ ARM were deleted, because ARM no longer needs special treatment.
 | --- | --- |
 | `OpenCourant_linux64.zip` | Starter and Engine, single and double precision, SMP and OpenMPI |
 | `OpenCourant_linuxa64.zip` | Identical set, built natively for arm64 |
-| `OpenCourant_win64.zip` | Starter and Engine, single and double precision, **SMP only** |
+| `OpenCourant_win64.zip` | Starter and Engine, single and double precision, SMP and Intel MPI |
 
 All three include the `anim_to_vtk` and `th_to_csv` converters and the launcher
 GUI. The Linux `_ompi` Engines need OpenMPI 4.1.2; the SMP Engines run
-standalone. The Windows package bundles the Intel runtime libraries it needs.
+standalone. The Windows package bundles the Intel MPI runtime, so single-node
+`mpiexec` runs work with no extra setup.
 
 Per-platform setup is on the [downloads page](/downloads/).
 
@@ -62,7 +63,6 @@ Per-platform setup is on the [downloads page](/downloads/).
   an OpenRadioss package from **August or September 2026**, please check it.
 - **`/ALE/STRUCTURED_MESH` is still rejected**, explicitly, rather than
   silently producing bad meshes.
-- **Windows has no MPI Engine yet.** It is SMP only for now.
 - **The open reader is the durable fix.** The AGPL-licensed reader already in
   the repository is a handful of functions from replacing the closed one
   outright, on every platform. Finishing it ends this entire category of
