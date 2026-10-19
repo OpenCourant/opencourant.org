@@ -13,6 +13,7 @@ disableKinds = ["taxonomy", "term"]
   forum = "https://github.com/orgs/OpenCourant/discussions"
   chat = "https://chat.rockylinux.org/rocky-linux/channels/opencourant"
   email = "hello@opencourant.org"
+  resf = "https://www.resf.org"
 
 # Release packages shown on /downloads/.
 #

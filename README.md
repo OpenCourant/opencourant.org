@@ -3,6 +3,9 @@
 Homepage for [OpenCourant](https://github.com/OpenCourant/OpenCourant), the community
 continuation of OpenRadioss.
 
+OpenCourant is an Incubator Project of the
+[Rocky Enterprise Software Foundation](https://www.resf.org).
+
 Built with [Hugo](https://gohugo.io/) (no external theme; layouts and CSS live
 in this repo).
 
